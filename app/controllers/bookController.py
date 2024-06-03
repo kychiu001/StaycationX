@@ -27,6 +27,7 @@ def view():
 @booking.route('/book', methods=['GET', 'POST'])
 @login_required
 def book():
+    # sjdflkj
     if request.method == 'POST':
         hotel_name=request.form.get("hotel_name")
         check_in_date=request.form.get("check_in_date") 
