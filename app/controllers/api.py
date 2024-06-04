@@ -11,6 +11,7 @@ from bson import json_util
 from app.models.users import User
 from app.models.package import Package
 from app.models.token import UserTokens
+from app.models.book import Booking
 
 from app.utils.api import extract_keys
 
@@ -70,6 +71,28 @@ def getAllPackages():
     packages_list = [json.loads(json_util.dumps(package.to_mongo())) for package in allPackages]
     projected_list = [extract_keys(k, idx+1) for idx, k in enumerate(packages_list)]
     return jsonify({'data': projected_list}), 201
+
+# The API route to get all packages  
+@api.route('/api/book/newBooking', methods=['POST'])
+@api_auth.login_required
+def newBooking():
+    try:
+        check_in_date = request.form.get("check_in_date")
+        user_email = request.form.get("user_email")
+        hotel_name = request.form.get("hote_name")
+    except Exception as e:
+        return jsonify({"error": "Invalid data format"}), 400  # Bad Request
+
+    # Process booking data (replace with your booking logic)
+    # This is a placeholder, implement your booking logic here
+    print(f"Booking received for: {user_email}, Hotel: {hotel_name}, Check-in: {check_in_date}")
+    # You would typically save this data to a database or process the booking
+
+    booking_user = User.getUser(email=user_email)
+    booking_package = Package.getPackage(hotel_name=hotel_name)
+    aBooking = Booking.createBooking(check_in_date, booking_user, booking_package) 
+
+    return jsonify({"message": "Booking request received successfully"}), 201  # Created
 
 # Protected route for authorized users
 @api.route('/api/protected')
