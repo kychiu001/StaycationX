@@ -77,6 +77,7 @@ def getAllPackages():
 @api_auth.login_required
 def newBooking():
     try:
+        # Date Format = 'YYYY-MM-DD'
         check_in_date = request.form.get("check_in_date")
         user_email = request.form.get("user_email")
         hotel_name = request.form.get("hote_name")
@@ -92,7 +93,60 @@ def newBooking():
     booking_package = Package.getPackage(hotel_name=hotel_name)
     aBooking = Booking.createBooking(check_in_date, booking_user, booking_package) 
 
-    return jsonify({"message": "Booking request received successfully"}), 201  # Created
+    return jsonify({"message": "Booking created successfully"}), 201  # Created
+
+# The API route to manage bookings 
+@api.route('/api/book/manageBooking', methods=['POST'])
+@api_auth.login_required
+def manageBooking():
+    try:
+        user_email = request.form.get("user_email")
+    except Exception as e:
+        return jsonify({f"error": "No booking under {user_email}"}), 400  # Bad Request
+    
+    booking_user = User.getUser(email=user_email)
+    allBookings = Booking.getUserBookingsFromDate(booking_user, '1900-01-01')
+    sorted_data_desc = sorted(allBookings, key=lambda d: d['check_in_date'], reverse=True)
+    dereferenced_data = Booking.dereferenceBookings(sorted_data_desc)
+
+    return jsonify({"message": "Booking retrieved successfully",
+                    "data": dereferenced_data}), 201  # retrieved
+
+# The API route to update a booking
+@api.route('/api/book/updateBooking', methods=['POST'])
+@api_auth.login_required
+def updateBooking():
+    try:
+        user_email = request.form.get("user_email")
+        new_check_in_date = request.form.get("new_check_in_date")
+        old_check_in_date = request.form.get("old_check_in_date")
+        hotel_name = request.form.get("hotel_name")
+    except Exception as e:
+        return jsonify({f"error": "No booking under {user_email}, {old_check_in_date} and {hotel_name}"}), 400  # Bad Request
+    
+    customer = User.getUser(email=user_email)
+    if Booking.updateBooking(old_check_in_date, new_check_in_date, customer, hotel_name):
+        return jsonify({"message": "Booking updated successfully"}), 201  # retrieved
+    else:
+        return jsonify({"message": "Booking update failed"}), 400
+
+# The API route to delete a booking
+@api.route('/api/book/deleteBooking', methods=['POST'])
+@api_auth.login_required
+def deleteBooking():
+    try:
+        user_email = request.form.get("user_email")
+        check_in_date = request.form.get("check_in_date")
+        hotel_name = request.form.get("hotel_name")
+    except Exception as e:
+        return jsonify({f"error": "No booking under {user_email}, {check_in_date} and {hotel_name}"}), 400  # Bad Request
+    
+    customer = User.getUser(email=user_email)
+
+    if Booking.deleteBooking(check_in_date, customer, hotel_name):
+        return jsonify({"message": "Booking delete successfully"}), 201  # retrieved
+    else:
+        return jsonify({"message": "Booking deletion failed"}), 400
 
 # Protected route for authorized users
 @api.route('/api/protected')

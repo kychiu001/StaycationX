@@ -49,11 +49,24 @@ class Booking(db.Document):
         if booking:
             booking.check_in_date = new_check_in_date
             return booking.save()
-            
-
+    
     @staticmethod
     def deleteBooking(check_in_date, customer, hotel_name):
         booking = Booking.getBooking(check_in_date, customer, hotel_name)
         if booking:
             booking.delete()
         return booking
+    
+    # For the API branch to return JSON data
+    @staticmethod
+    def dereferenceBooking(booking):
+        return {
+            'check_in_date': booking.check_in_date,
+            'customer': booking.customer.email,
+            'package': booking.package.hotel_name,
+            'total_cost': booking.total_cost
+        }
+    
+    @staticmethod
+    def dereferenceBookings(bookings):
+        return [Booking.dereferenceBooking(booking) for booking in bookings]
