@@ -21,6 +21,15 @@
             ],
             "jinja": true,
             "justMyCode": true
-        }
+        },
+        {
+            "type": "python",
+            "request": "launch",
+            "name": "pytest",
+            "module": "pytest",
+            "env": {
+              "MOZ_HEADLESS":"1"
+            }
+          }
     ]
 }
