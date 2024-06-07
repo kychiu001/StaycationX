@@ -80,7 +80,7 @@ def newBooking():
         # Date Format = 'YYYY-MM-DD'
         check_in_date = request.form.get("check_in_date")
         user_email = request.form.get("user_email")
-        hotel_name = request.form.get("hote_name")
+        hotel_name = request.form.get("hotel_name")
     except Exception as e:
         return jsonify({"error": "Invalid data format"}), 400  # Bad Request
 
