@@ -6,29 +6,26 @@ ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /
 RUN mkdir -p staycation/app
 COPY app /staycation/app
+RUN mkdir -p staycation/tests
+COPY tests /staycation/app/tests
 COPY requirements.txt /staycation
 
-# WORKDIR /staycation/app
 WORKDIR /staycation
-RUN pip3 install -r requirements.txt --no-cache-dir 
+RUN pip3 install -r requirements.txt --no-cache-dir
 RUN pip3 install gunicorn --no-cache-dir && \
-    pip3 install Werkzeug==2.2.2 --no-cache-dir 
-    # wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | apt-key add - && \
-    # echo 'deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse' | tee -a /etc/apt/sources.list.d/mongodb-org-7.0.list && \
-    # apt update && \
-    # apt install mongodb-org -y
-    
-    # The followings works for Ubuntu 20.04 on AWS EC2
-    # wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc |  gpg --dearmor | sudo tee /usr/share/keyrings/mongodb.gpg > /dev/null 
-    # echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-    # sudo apt update
-    # sudo apt install mongodb-org
+    pip3 install Werkzeug==2.2.2 --no-cache-dir
+
+COPY geckodriver /opt/geckodriver
+
+RUN apt update && \
+    apt install sudo -y && \
+    install -d -m 0755 /etc/apt/keyrings && \
+    wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null && \
+    echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null && \
+    printf "Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000\n" > /etc/apt/preferences.d/mozilla && \
+    apt update && \
+    apt install firefox -y && \
+    chmod a+x /opt/geckodriver
 
 WORKDIR /staycation
-# # ENV PYTHONPATH=/staycation/app
-# ENV PYTHONPATH=/staycation
-
-# EXPOSE 5000
-# # CMD ["gunicorn", "--bind", "0.0.0.0:5000", "-m", "007", "app:app"]
-#CMD ["gunicorn", "--bind", "0.0.0.0:5000", "-m", "007", "app:create_app()"]
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "-m", "007", "--worker-class", "gevent", "--workers", 5, "--worker-connections", 1000, "app:create_app()"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000",  "-m", "007", "--workers", "5", "app:create_app()"]

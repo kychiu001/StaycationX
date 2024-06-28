@@ -1,10 +1,18 @@
+#  To remove all containers and images
+# sudo docker stop $(sudo docker ps -a -q)
+# sudo docker rm $(sudo docker ps -a -q)
+# sudo docker rmi -f $(sudo docker images -aq)
+
+# Video on docker tutorial
+# https://www.youtube.com/playlist?list=PLy7NrYWoggjzfAHlUusx2wuDwfCrmJYcs 
+
 version: "3.8"
 
 services:
 
   frontend:
-    container_name: ict381web
-    image: ict381
+    container_name: ict381app
+    image: ict381_staycation
     build: .
     networks:
       - ict381network
@@ -13,11 +21,27 @@ services:
 
   db:
     container_name: ict381db
-    image: mongo
+    image: ict381_mongo
+    build:
+      context: .
+      dockerfile: DockerfileMongo
     networks:
       - ict381network
     ports:
       - "27017:27017"
+
+  nginx:
+    container_name: ict381web
+    image: ict381_nginx
+    build: 
+      context: .
+      dockerfile: DockerfileNginx
+    networks:
+      - ict381network
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
 
 networks:
   ict381network:

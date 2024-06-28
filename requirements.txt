@@ -19,4 +19,3 @@ pytest
 selenium
 gunicorn
 locust
-

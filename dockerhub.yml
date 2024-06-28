@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+
+  frontend:
+    image: suss001/ict381_staycation:0.02
+    ports:
+      - "5000:5000"
+    networks:
+      - ict381network
+  db:
+    image: suss001/ict381_mongo:0.01
+    ports:
+      - "27017:27017"
+    networks:
+      - ict381network
+  nginx:
+    image: suss001/ict381_nginx:0.01
+    ports:
+      - "80:80"
+    networks:
+      - ict381network
+    depends_on:
+      - frontend
+
+networks:
+  ict381network:
+
