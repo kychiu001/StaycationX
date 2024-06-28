@@ -11,7 +11,7 @@ def extract_keys(dictionary, running_id=1):
     """
     extracted_data = {
         key: dictionary[key]
-        for key in ["hotel_name", "image_url", "description"]
+        for key in ["hotel_name", "image_url", "description", "unit_cost", "duration"]
         if key in dictionary
     }
     extracted_data["id"] = running_id

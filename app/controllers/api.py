@@ -86,6 +86,9 @@ def newBooking():
 
     # Process booking data (replace with your booking logic)
     # This is a placeholder, implement your booking logic here
+    if check_in_date == '' or user_email == '' or hotel_name == '':
+        return jsonify({"error": "Invalid data format"}), 400
+
     print(f"Booking received for: {user_email}, Hotel: {hotel_name}, Check-in: {check_in_date}")
     # You would typically save this data to a database or process the booking
 
