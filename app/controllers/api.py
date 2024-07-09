@@ -60,6 +60,7 @@ def api_gettoken():
         # Simulated token generation (replace with actual token logic)
         token = generate_password_hash(user.email+datetime_str, method='sha256')
         UserTokens.createToken(email = user.email, token=token)
+        token =  UserTokens.getToken(email = email)
         # Return the newly generated token
         return jsonify({'token': token}), 200
 
