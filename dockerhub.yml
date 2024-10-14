@@ -15,7 +15,7 @@ services:
     networks:
       - ict381network
   nginx:
-    image: paulhjwu/ict381_nginx
+    image: paulhjwu/ict381_myreactapp
     ports:
       - "80:80"
     networks:
