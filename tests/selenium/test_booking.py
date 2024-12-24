@@ -27,7 +27,7 @@ import time
 import os
 
 def test_booking():
-    service_obj = Service("/d/tars/geckodriver")
+    service_obj = Service("/home/paulhjwu/StayZ/geckodriver")
 
     # added for headless 
     options = FirefoxOptions()

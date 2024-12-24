@@ -50,7 +50,7 @@ def manageBooking(days = -2000):
     bookings = list(Booking.getUserBookingsFromDate(customer=current_user, from_date=date.today()+timedelta(days = days)))
     if bookings:
         bookings.sort(key = lambda b: b.check_in_date)
-    return render_template('userBookings.html', panel='Manage Booking', bookings=bookings)
+    return render_template('userBookings.html', panel='Manage Booking', bookings=bookings, total_rec=len(bookings))
 
 @booking.route("/updateBooking", methods=["POST"])
 @login_required
