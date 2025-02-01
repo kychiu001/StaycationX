@@ -28,8 +28,13 @@
             "name": "pytest",
             "module": "pytest",
             "env": {
-              "MOZ_HEADLESS":"1"
-            }
-          }
+                "MOZ_HEADLESS": "1",
+                "FLASK_ENV": "testing",
+                "PYTEST_ADDOPTS": "--capture=no"
+            },
+            "args": [
+                "tests/selenium/test_booking.py"
+            ]
+        }
     ]
 }

@@ -21,18 +21,21 @@ from .routes import main
 def create_app():
     app = Flask(__name__)
 
-    host = 'localhost' if os.getenv('FLASK_ENV') == 'development' else 'db'
+    if os.getenv('FLASK_ENV') != 'testing':
+    
+        host = 'localhost' if os.getenv('FLASK_ENV') == 'development' else 'db'
 
-    app.config['MONGODB_SETTINGS'] = {
-        'db':'staycation',
-        # 'host':'localhost' # choose this one when running locally
-        # 'host':'db'      # choose this one when running as containers
-        'host' : host
-    }
+        app.config['MONGODB_SETTINGS'] = {
+            'db':'staycation',
+            # 'host':'localhost' # choose this one when running locally
+            # 'host':'db'      # choose this one when running as containers
+            'host' : host
+        }
+        
+        db.init_app(app)
+    
     app.static_folder = 'assets'
     
-    # db = MongoEngine(app)
-    db.init_app(app)
     login_manager.init_app(app)
     cors.init_app(app)
 

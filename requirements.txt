@@ -1,13 +1,13 @@
 click
 Flask==2.2.2
 Flask-Login
-flask-mongoengine
+flask-mongoengine==1.0.0
+mongoengine==0.24.0
+pymongo<4.0.0  # Add version constraint
 Flask-WTF
 itsdangerous
 Jinja2==3.0.0
 MarkupSafe
-mongoengine
-pymongo
 six
 Werkzeug==2.2.2
 WTForms==2.3.3

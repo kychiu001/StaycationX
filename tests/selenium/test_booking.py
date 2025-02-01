@@ -26,11 +26,16 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import time
 import os
 
+<<<<<<< HEAD
 def test_booking():
     
     path = os.getenv('GECKODRIVER_PATH')
     service_obj = Service(path) if os.getenv('FLASK_ENV') == 'development' else Service("/opt/geckodriver")
     #service_obj = Service("/home/paulhjwu/StayZ/geckodriver")
+=======
+def test_booking(live_server):
+    service_obj = Service(executable_path="/c/D_ALL/Desktop/ICT381/StayZ/geckodriver")
+>>>>>>> f290eb9 ((0) Ignore test database files (1) Rectify API testing by removing try-except block (2) Revise to use a test_db and start Flask and DB server during the testing)
 
     # added for headless 
     options = FirefoxOptions()
@@ -56,7 +61,7 @@ def test_booking():
     driver = webdriver.Firefox(service=service_obj, options=options)
 
     driver.maximize_window()
-    driver.get("localhost:5000")
+    driver.get("http://localhost:5000")
 
     driver.find_element(By.XPATH,"//a[@href='/viewPackageDetail/Shangri-La Singapore']").click()
     time.sleep(1)
@@ -71,4 +76,4 @@ def test_booking():
 
     print("Application Title: ", driver.title)
     print("Application URL: ", driver.current_url)
-    # driver.quit()
+    driver.quit()

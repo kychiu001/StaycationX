@@ -37,7 +37,11 @@ def test_gettoken_and_retrieve_package_with_fixture(client):
     print(token)
     credentials = base64.b64encode(f"{useremail}:{token}".encode('utf-8')).decode('utf-8')
     headers = {'Authorization': f'Basic {credentials}'}
+<<<<<<< HEAD
     response = client.post('api/package/getAllPackages', headers=headers, json={})
+=======
+    response = client.post('api/package/getAllPackages', headers=headers)
+>>>>>>> f290eb9 ((0) Ignore test database files (1) Rectify API testing by removing try-except block (2) Revise to use a test_db and start Flask and DB server during the testing)
     response_data = json.loads(response.text)
     print(response_data)
 
@@ -61,7 +65,11 @@ def test_gettoken_and_new_booking_with_fixture(client):
         'hotel_name': "Shangri-La Singapore",
     }
     headers = {'Authorization': f'Basic {credentials}'}
+<<<<<<< HEAD
     response = client.post('api/book/newBooking', headers=headers, json=data)
+=======
+    response = client.post('api/book/newBooking', headers=headers, data=data)
+>>>>>>> f290eb9 ((0) Ignore test database files (1) Rectify API testing by removing try-except block (2) Revise to use a test_db and start Flask and DB server during the testing)
     response_data = json.loads(response.text)
     print(response_data)
 
@@ -83,7 +91,11 @@ def test_gettoken_and_manage_booking_with_fixture(client):
         'user_email': useremail,
     }
     headers = {'Authorization': f'Basic {credentials}'}
+<<<<<<< HEAD
     response = client.post('api/book/manageBooking', headers=headers, json=data)
+=======
+    response = client.post('api/book/manageBooking', headers=headers, data=data)
+>>>>>>> f290eb9 ((0) Ignore test database files (1) Rectify API testing by removing try-except block (2) Revise to use a test_db and start Flask and DB server during the testing)
     response_data = json.loads(response.text)
     print(response_data)
     print(len(response_data['data']))
@@ -109,9 +121,14 @@ def test_gettoken_and_update_booking_with_fixture(client):
         'hotel_name': "Shangri-La Singapore"
     }
     headers = {'Authorization': f'Basic {credentials}'}
+<<<<<<< HEAD
     response = client.post('api/book/updateBooking', headers=headers, json=data)
     assert response.status_code == 201
     # print(response.status_code)
+=======
+    response = client.post('api/book/updateBooking', headers=headers, data=data)
+    assert response.status_code == 201
+>>>>>>> f290eb9 ((0) Ignore test database files (1) Rectify API testing by removing try-except block (2) Revise to use a test_db and start Flask and DB server during the testing)
 
 def test_gettoken_and_delete_booking_with_fixture(client):
     """
@@ -133,7 +150,12 @@ def test_gettoken_and_delete_booking_with_fixture(client):
         'hotel_name': "Shangri-La Singapore"
     }
     headers = {'Authorization': f'Basic {credentials}'}
+<<<<<<< HEAD
     response = client.post('api/book/deleteBooking', headers=headers, json=data)
     assert response.status_code == 201
     # print(response.status_code)
+=======
+    response = client.post('api/book/deleteBooking', headers=headers, data=data)
+    assert response.status_code == 201
+>>>>>>> f290eb9 ((0) Ignore test database files (1) Rectify API testing by removing try-except block (2) Revise to use a test_db and start Flask and DB server during the testing)
 

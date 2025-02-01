@@ -15,3 +15,6 @@ __pycache__/*.pyc
 app/controllers/__pycache__/*.pyc
 app/models/__pycache__/*.pyc
 *.pyc
+
+#test database files
+tests/test_db/*
