@@ -27,7 +27,9 @@ import time
 import os
 
 def test_booking():
-    service_obj = Service("/home/paulhjwu/StayZ/geckodriver")
+    
+    service_obj = Service("/home/paulhjwu/StayZ/geckodriver") if os.getenv('FLASK_ENV') == 'development' else Service("/opt/geckodriver")
+    #service_obj = Service("/home/paulhjwu/StayZ/geckodriver")
 
     # added for headless 
     options = FirefoxOptions()
