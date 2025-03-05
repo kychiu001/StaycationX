@@ -24,15 +24,12 @@ api_auth = HTTPBasicAuth()
 @api.route('/api/user/gettoken', methods=['POST'])
 def api_gettoken():
     if request.method == 'POST': 
-
-        # To handle both JSON payloads (commonly used with JavaScript or ReactJS) 
-        # and form data (which can be sent from a Python script or a HTML form).
-        try:
-            data = request.json
-            if data: # if using ReactJS
-                email = data['email']
-                password = data['password']
-        except: # if using python
+        # Prioritize JSON data
+        data = request.json
+        if data:
+            email = data['email']
+            password = data['password']
+        else:  # Fallback to form data
             email = request.form.get('email')
             password = request.form.get('password')
 
@@ -78,10 +75,16 @@ def getAllPackages():
 @api_auth.login_required
 def newBooking():
     try:
-        # Date Format = 'YYYY-MM-DD'
-        check_in_date = request.form.get("check_in_date")
-        user_email = request.form.get("user_email")
-        hotel_name = request.form.get("hotel_name")
+        # Prioritize JSON data
+        data = request.json
+        if data:
+            check_in_date = data.get("check_in_date")
+            user_email = data.get("user_email")
+            hotel_name = data.get("hotel_name")
+        else:  # Fallback to form data
+            check_in_date = request.form.get("check_in_date")
+            user_email = request.form.get("user_email")
+            hotel_name = request.form.get("hotel_name")
     except Exception as e:
         return jsonify({"error": "Invalid data format"}), 400  # Bad Request
 
@@ -104,7 +107,12 @@ def newBooking():
 @api_auth.login_required
 def manageBooking():
     try:
-        user_email = request.form.get("user_email")
+        # Prioritize JSON data
+        data = request.json
+        if data:
+            user_email = data.get("user_email")
+        else:  # Fallback to form data
+            user_email = request.form.get("user_email")
     except Exception as e:
         return jsonify({f"error": "No booking under {user_email}"}), 400  # Bad Request
     
@@ -121,10 +129,18 @@ def manageBooking():
 @api_auth.login_required
 def updateBooking():
     try:
-        user_email = request.form.get("user_email")
-        new_check_in_date = request.form.get("new_check_in_date")
-        old_check_in_date = request.form.get("old_check_in_date")
-        hotel_name = request.form.get("hotel_name")
+        # Prioritize JSON data
+        data = request.json
+        if data:
+            user_email = data.get("user_email")
+            new_check_in_date = data.get("new_check_in_date")
+            old_check_in_date = data.get("old_check_in_date")
+            hotel_name = data.get("hotel_name")
+        else:  # Fallback to form data
+            user_email = request.form.get("user_email")
+            new_check_in_date = request.form.get("new_check_in_date")
+            old_check_in_date = request.form.get("old_check_in_date")
+            hotel_name = request.form.get("hotel_name")
     except Exception as e:
         return jsonify({f"error": "No booking under {user_email}, {old_check_in_date} and {hotel_name}"}), 400  # Bad Request
     
@@ -139,9 +155,16 @@ def updateBooking():
 @api_auth.login_required
 def deleteBooking():
     try:
-        user_email = request.form.get("user_email")
-        check_in_date = request.form.get("check_in_date")
-        hotel_name = request.form.get("hotel_name")
+        # Prioritize JSON data
+        data = request.json
+        if data:
+            user_email = data.get("user_email")
+            check_in_date = data.get("check_in_date")
+            hotel_name = data.get("hotel_name")
+        else:  # Fallback to form data
+            user_email = request.form.get("user_email")
+            check_in_date = request.form.get("check_in_date")
+            hotel_name = request.form.get("hotel_name")
     except Exception as e:
         return jsonify({f"error": "No booking under {user_email}, {check_in_date} and {hotel_name}"}), 400  # Bad Request
     
