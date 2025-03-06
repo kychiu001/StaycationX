@@ -69,7 +69,7 @@ def test_gettoken_and_manage_booking_with_fixture(client):
     """
     GIVEN a Flask API application configured for testing
     WHEN the '/api/user/gettoken' request path is sent (POST) with authentication information
-    THEN if the user is authenticated then a token is returned for the user to query the '/api/book/newBooking' request path
+    THEN if the user is authenticated then a token is returned for the user to query the '/api/book/manageBooking' request path
     """
     useremail = 'peter@cde.com'
     response = client.post("api/user/gettoken", json={'email': useremail, 'password': '12345'})
@@ -117,7 +117,7 @@ def test_gettoken_and_delete_booking_with_fixture(client):
     """
     GIVEN a Flask API application configured for testing
     WHEN the '/api/user/gettoken' request path is sent (POST) with authentication information
-    THEN if the user is authenticated then a token is returned for the user to query the '/api/book/updateBooking' request path
+    THEN if the user is authenticated then a token is returned for the user to query the '/api/book/deleteBooking' request path
     """
     useremail = 'peter@cde.com'
     response = client.post("api/user/gettoken", json={'email': useremail, 'password': '12345'})
