@@ -63,7 +63,7 @@ def start_mongodb():
 @pytest.fixture(scope='session', autouse=True)
 def setup_app():
     # Configure test environment
-    os.environ['FLASK_ENV'] = 'testing'
+    #os.environ['FLASK_ENV'] = 'testing'
     app = create_app()
     
     # Override MongoDB settings for tests
