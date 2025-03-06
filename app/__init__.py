@@ -21,17 +21,17 @@ from .routes import main
 def create_app():
     app = Flask(__name__)
 
-    if os.getenv('FLASK_ENV') != 'testing':
-    
-        host = 'localhost' if os.getenv('FLASK_ENV') == 'development' else 'db'
-
+    if os.getenv('SELF_TESTING') != '1':
+        
+        host = 'localhost' if os.getenv('FLASK_ENV') == 'development' else 'db'    
+        
         app.config['MONGODB_SETTINGS'] = {
-            'db':'staycation',
+            'db': 'staycation',
             # 'host':'localhost' # choose this one when running locally
             # 'host':'db'      # choose this one when running as containers
             'host' : host
         }
-        
+
         db.init_app(app)
     
     app.static_folder = 'assets'

@@ -14,16 +14,16 @@ from app.extensions import db
 
 load_dotenv()
 
-# The "autouse=True" means that this fixture will be automatically used by all the tests.
-@pytest.fixture(scope='session', autouse=True)
-def setup_app():
+# # The "autouse=True" means that this fixture will be automatically used by all the tests.
+# @pytest.fixture(scope='session', autouse=True)
+# def setup_app():
 
-    # Set the app to testing mode connect to localhost
-    #os.environ['FLASK_ENV'] = 'development'
-    # os.setenv('FLASK_ENV', 'development')
+#     # Set the app to testing mode connect to localhost
+#     #os.environ['FLASK_ENV'] = 'development'
+#     # os.setenv('FLASK_ENV', 'development')
 
-    app = create_app()  # replace 'testing' with your actual testing config
-    # db.init_app(app)
+#     app = create_app()  # replace 'testing' with your actual testing config
+#     # db.init_app(app)
 
 # Define the path for the test database
 TEST_DB_PATH = os.path.join(os.path.dirname(__file__), 'test_db')  # This will create a 'test_db' directory in the 'tests' folder
@@ -64,24 +64,47 @@ def start_mongodb():
 def setup_app():
     # Configure test environment
     #os.environ['FLASK_ENV'] = 'testing'
+    original_env = os.environ.copy()
+    
+    # Set required environment variables
+    os.environ.update({
+        'MOZ_HEADLESS': '1',  # Add other variables as needed
+        'SELF_TESTING' : '1'
+    })
+    
     app = create_app()
     
-    # Override MongoDB settings for tests
     app.config['MONGODB_SETTINGS'] = {
         'db': TEST_DB_NAME,
-        'host': 'localhost',
-        'alias': 'default'
+        # 'host':'localhost' # choose this one when running locally
+        # 'host':'db'      # choose this one when running as containers
+        'host' : 'localhost' if os.getenv('FLASK_ENV') == 'development' else 'db'
     }
     
-    with app.app_context():
+    with app.app_context():    
         db.init_app(app)
         yield app
+        
+    os.environ.clear()
+    os.environ.update(original_env)
 
 # Fixture to load data into MongoDB
 @pytest.fixture(scope='session', autouse=True)
 def load_db_data(start_mongodb, setup_app):
+    
     # Get raw PyMongo connection from MongoEngine
-    pymongo_db = db.connection[TEST_DB_NAME]
+    try:
+        # Attempt to establish connection
+        pymongo_db = db.connection[TEST_DB_NAME]
+        
+        # Verify connection is working by executing a simple command
+        pymongo_db.command('ping')
+        
+        print(f"Successfully connected to MongoDB test database: {TEST_DB_NAME}")
+        
+    except Exception as e:
+        print(f"Failed to connect to MongoDB: {str(e)}")
+        raise e
     
     # Load BSON files directly into collections
     collections = {
@@ -107,13 +130,6 @@ def load_db_data(start_mongodb, setup_app):
 @pytest.fixture(scope="session")
 def live_server(setup_app):
     # Preserve original environment
-    original_env = os.environ.copy()
-    
-    # Set required environment variables
-    os.environ.update({
-        'FLASK_ENV': 'testing',
-        'MOZ_HEADLESS': '1'  # Add other variables as needed
-    })
     
     # Configure app
     app = setup_app
@@ -138,8 +154,7 @@ def live_server(setup_app):
     yield
     
     # Restore original environment
-    os.environ.clear()
-    os.environ.update(original_env)
+
 
 # Client fixture for testing
 @pytest.fixture()
