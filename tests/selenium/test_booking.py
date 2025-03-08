@@ -28,7 +28,8 @@ import os
 
 def test_booking():
     
-    service_obj = Service("/home/paulhjwu/StayZ/geckodriver") if os.getenv('FLASK_ENV') == 'development' else Service("/opt/geckodriver")
+    path = os.getenv('GECKODRIVER_PATH')
+    service_obj = Service(path) if os.getenv('FLASK_ENV') == 'development' else Service("/opt/geckodriver")
     #service_obj = Service("/home/paulhjwu/StayZ/geckodriver")
 
     # added for headless 
