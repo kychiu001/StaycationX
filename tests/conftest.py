@@ -18,13 +18,6 @@ load_dotenv()
 # @pytest.fixture(scope='session', autouse=True)
 # def setup_app():
 
-#     # Set the app to testing mode connect to localhost
-#     #os.environ['FLASK_ENV'] = 'development'
-#     # os.setenv('FLASK_ENV', 'development')
-
-#     app = create_app()  # replace 'testing' with your actual testing config
-#     # db.init_app(app)
-
 # Define the path for the test database
 TEST_DB_PATH = os.path.join(os.path.dirname(__file__), 'test_db')  # This will create a 'test_db' directory in the 'tests' folder
 
@@ -63,7 +56,6 @@ def start_mongodb():
 @pytest.fixture(scope='session', autouse=True)
 def setup_app():
     # Configure test environment
-    #os.environ['FLASK_ENV'] = 'testing'
     original_env = os.environ.copy()
     
     # Set required environment variables
@@ -76,9 +68,7 @@ def setup_app():
     
     app.config['MONGODB_SETTINGS'] = {
         'db': TEST_DB_NAME,
-        # 'host':'localhost' # choose this one when running locally
-        # 'host':'db'      # choose this one when running as containers
-        'host' : 'localhost' if os.getenv('FLASK_ENV') == 'development' else 'db'
+        'host': get_host('db')  # Use the helper function to determine the database host
     }
     
     with app.app_context():    
@@ -129,11 +119,10 @@ def load_db_data(start_mongodb, setup_app):
 # Add new fixture to run the Flask server
 @pytest.fixture(scope="session")
 def live_server(setup_app):
-    # Preserve original environment
-    
     # Configure app
     app = setup_app
-    app.config.update(SERVER_NAME='localhost:5000')
+    server_name = f'{get_host("app")}:5000'  # Use the helper function to determine the application server name
+    app.config.update(SERVER_NAME=server_name)
     
     # Start server thread
     import threading
@@ -152,11 +141,30 @@ def live_server(setup_app):
     time.sleep(2)
     
     yield
-    
-    # Restore original environment
-
 
 # Client fixture for testing
 @pytest.fixture()
 def client(setup_app):
     return setup_app.test_client()
+
+def get_host(host_type='app'):
+    """
+    Determine the host based on the FLASK_ENV environment variable and the type of host requested.
+    
+    Args:
+        host_type (str): The type of host to determine. Can be 'app' for the application server or 'db' for the database.
+    
+    Returns:
+        str: The appropriate host based on the environment and type.
+    """
+    env = os.getenv('FLASK_ENV', 'development')
+    if host_type == 'db':
+        if env == 'development':
+            return 'localhost'
+        else:
+            return 'db'
+    else:  # host_type == 'app'
+        if env == 'development':
+            return 'localhost'
+        else:
+            return 'frontend'
