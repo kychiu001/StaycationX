@@ -1,17 +1,21 @@
 import os
 import subprocess
 import time
-import json
 import pytest
+
 from dotenv import load_dotenv
 import shutil
 
+# Add the parent directory to the Python path
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# Now we can import from app
 from app.extensions import db, login_manager, cors
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from app import create_app
 from bson import decode_all
-from app.extensions import db
 
 load_dotenv()
 
@@ -148,7 +152,7 @@ def live_server(setup_app):
     time.sleep(2)
     
     yield
-
+    
 # Client fixture for testing
 @pytest.fixture()
 def client(setup_app):
