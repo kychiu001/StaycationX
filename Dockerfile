@@ -9,6 +9,7 @@ COPY app /staycation/app
 RUN mkdir -p staycation/tests
 COPY tests /staycation/app/tests
 COPY requirements.txt /staycation
+COPY .env /staycation/.env
 
 WORKDIR /staycation
 RUN pip3 install -r requirements.txt --no-cache-dir
@@ -28,4 +29,4 @@ RUN apt update && \
     chmod a+x /opt/geckodriver
 
 WORKDIR /staycation
-CMD ["gunicorn", "--bind", "0.0.0.0:5000",  "-m", "007", "--workers", "5", "app:create_app()"]
+CMD ["sh", "-c", "echo FLASK_ENV=$FLASK_ENV; if [ \"$FLASK_ENV\" != \"delivery\" ]; then gunicorn --bind 0.0.0.0:5000 -m 007 --workers 5 app:create_app; fi"]

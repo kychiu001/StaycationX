@@ -30,19 +30,6 @@ services:
     ports:
       - "27017:27017"
 
-  nginx:
-    container_name: ict381web
-    image: ict381_nginx
-    build: 
-      context: .
-      dockerfile: DockerfileNginx
-    networks:
-      - ict381network
-    ports:
-      - "80:80"
-    depends_on:
-      - frontend
-
 networks:
   ict381network:
   
