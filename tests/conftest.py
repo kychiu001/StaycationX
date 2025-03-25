@@ -47,7 +47,7 @@ def start_mongodb():
             'mongod',
             '--dbpath', TEST_DB_PATH,
             '--unixSocketPrefix', TEST_DB_PATH,  # Use test directory for sockets
-            '--bind_ip', host             # Explicit local binding
+            '--bind_ip', '0.0.0.0'  # Bind to all network interfaces
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         
         # Wait longer for startup
@@ -149,8 +149,7 @@ def live_server(setup_app):
     server.start()
     
     # Wait for server to start
-    time.sleep(2)
-    
+    time.sleep(20)
     yield
     
 # Client fixture for testing
@@ -169,13 +168,8 @@ def get_host(host_type='app'):
         str: The appropriate host based on the environment and type.
     """
     env = os.getenv('FLASK_ENV', 'development')
-    if host_type == 'db':
-        if env == 'development':
-            return 'localhost'
-        else:
-            return 'db'
-    else:  # host_type == 'app'
-        if env == 'development':
-            return 'localhost'
-        else:
-            return 'frontend'
+    if env == 'development':
+        return 'localhost'
+    else:
+        # In production/delivery, both app and db are in the same container
+        return 'localhost'  # Use localhost since both services are in the same container

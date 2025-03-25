@@ -23,7 +23,9 @@ def create_app():
 
     if os.getenv('SELF_TESTING') != '1':
         
-        host = 'localhost' if os.getenv('FLASK_ENV') == 'development' else 'db'    
+        # Since both app and db are in the same container, we can use localhost
+        # host = 'localhost' if os.getenv('FLASK_ENV') == 'development' else 'db'
+        host = 'localhost' 
         
         app.config['MONGODB_SETTINGS'] = {
             'db': 'staycation',

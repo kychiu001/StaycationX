@@ -1,35 +1,15 @@
-#  To remove all containers and images
-# sudo docker stop $(sudo docker ps -a -q)
-# sudo docker rm $(sudo docker ps -a -q)
-# sudo docker rmi -f $(sudo docker images -aq)
-
-# Video on docker tutorial
-# https://www.youtube.com/playlist?list=PLy7NrYWoggjzfAHlUusx2wuDwfCrmJYcs 
-
-version: "3.8"
-
 services:
-
-  frontend:
-    container_name: ict381app
-    image: ict381_staycation
+  staycation:
     build: .
-    networks:
-      - ict381network
     ports:
       - "5000:5000"
+      - "27017:27017"  # Expose MongoDB port if needed
+    # environment:
+    #   - FLASK_ENV=${FLASK_ENV:-development}
+    # volumes:
+    #   - ict381vol:/staycation/data/db
+    env_file:
+      - .env
 
-  db:
-    container_name: ict381db
-    image: ict381_mongo
-    build:
-      context: .
-      dockerfile: DockerfileMongo
-    networks:
-      - ict381network
-    ports:
-      - "27017:27017"
-
-networks:
-  ict381network:
-  
+volumes:
+  ict381vol:

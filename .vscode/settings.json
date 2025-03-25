@@ -5,5 +5,11 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "remote.autoForwardPortsFallback": 0
+    "remote.autoForwardPortsFallback": 0,
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestPath": "pytest",
+    "python.testing.pytestArgs": ["tests"],
+    "python.testing.autoTestDiscoverOnSaveEnabled": false
 }
