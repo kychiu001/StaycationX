@@ -1,0 +1,40 @@
+
+services:
+  sonarqube:
+    image: sonarqube
+    container_name: sonarqube
+    hostname: sonarqube
+    ports:
+      - 9000:9000
+    volumes:
+      - /home/ubuntu/sonar/logs:/opt/sonarqube/logs
+      - /home/ubuntu/sonar/data:/opt/sonarqube/data
+      - /home/ubuntu/sonar/extensions:/opt/sonarqube/extensions
+    networks:
+      - sonarnetwork
+
+  db:
+    image: postgres
+    container_name: db
+    hostname: db
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    volumes:
+      - /home/ubuntu/sonar/pg_db:/var/lib/postgresql
+      - /home/ubuntu/sonar/pg_data:/var/lib/postgresql/data
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - sonarnetwork
+
+volumes:
+  pg_db:
+    driver: local
+  pg_data:
+    driver: local
+
+networks:
+  sonarnetwork:
