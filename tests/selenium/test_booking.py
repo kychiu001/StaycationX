@@ -26,7 +26,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import time
 import os
 
-def test_booking(live_server):
+def test_booking(load_db_data, live_server):
     
     path = os.getenv('GECKODRIVER_PATH')
     service_obj = Service(path) if os.getenv('FLASK_ENV') == 'development' else Service("/staycation/geckodriver")
