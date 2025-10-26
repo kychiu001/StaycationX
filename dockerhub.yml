@@ -3,19 +3,19 @@ version: "3.8"
 services:
 
   frontend:
-    image: suss001/ict381_staycation
+    image: kychiu01/ict381_staycation
     ports:
       - "5000:5000"
     networks:
       - ict381network
   db:
-    image: suss001/ict381_mongo
+    image: kychiu01/ict381_mongo
     ports:
       - "27017:27017"
     networks:
       - ict381network
   nginx:
-    image: suss001/ict381_myreactapp
+    image: kychiu01/ict381_myreactapp
     ports:
       - "80:80"
     networks:
