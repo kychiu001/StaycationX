@@ -14,7 +14,7 @@ services:
       - "27017:27017"
     networks:
       - ict381network
-  nginx:
+  myReactApp:
     image: kychiu01/ict381_myreactapp
     ports:
       - "80:80"
